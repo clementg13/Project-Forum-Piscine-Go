@@ -1,0 +1,188 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Profil
+{{end}}
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="banner noselect" id="profil-banner">
+        <div>
+        <img id="pp-banner" src="{{.User.Avatar}}">
+            <h4>{{.User.Username}}</h4>
+        </div>
+    </div>
+    <div class="profil-navigation">
+        <ul>
+            <li onclick="GoToSection('profil-div')" style="cursor:pointer"class="active linkprofil" id="profil-div-nav">Info</li>
+            <li onclick="GoToSection('profil-posts')" style="cursor:pointer"id="profil-posts-nav">All post</li>
+            <li onclick="GoToSection('profil-comments')" style="cursor:pointer"id="profil-comments-nav">All comments</li>
+        </ul>
+    </div>
+     {{if .ErrorMsg}}
+                <div class="caution">{{.ErrorMsg}}</div>
+            {{end}}
+    <div style="position:relative;"class="profil-div activ-div"  id="profil-div">
+        <label>Profil info:</label>
+            <form action="/profil" method="POST">
+                <input type="text" value="{{.User.Username}}" placeholder="Username" name="username">
+                <input type="text" value="{{.User.Email}}" placeholder="Email" name="email">
+                <input type="text" value="" placeholder="New password" name="password" >
+                <input type="text" value="" placeholder="Password confirmation" password="passwordconfirmation" >
+            <button id="modification" type="submit">Send Modifications</button>
+           
+          </form>
+        <button class="caution" id="delete" onclick='location.href="/profildeletion"'>Delete your account</button>
+
+    </div>
+      
+     <div class="profil-posts none" id="profil-posts">
+        <label>Profil posts:</label>
+        
+            <div class="mainContainer">
+        
+            {{range .Allposts}}
+                <div class="post-preview" onclick="location.href='/post?id={{.Id}}'">
+                    <div class="pp-post" >
+                    <img src="{{.Avatar}}">
+                    </div>
+                    <div class="post-info">
+                    
+                        <div class="title-post">
+                            <h3>{{.Title}}</h3>    
+                        </div>
+                        
+                        <div class="title-info">
+                            <span class="username"><strong>{{.UserName}}</strong></span>
+                            <span class="creation-date">01 Janvier 2020</span>
+                            <span class="comments">{{.NumberOfComments}} Replies</span>
+                            <span class="likes">{{.Votes}} Likes</span>
+                        </div>
+                        <div class="profil-pics">
+                            <img src="https://image.flaticon.com/icons/png/512/4652/4652640.png">
+                            <img src="https://image.flaticon.com/icons/png/512/4652/4652650.png">
+                            <img src="https://image.flaticon.com/icons/png/512/4652/4652660.png">
+                            <img src="https://image.flaticon.com/icons/png/512/4652/4652670.png">
+                        </div>
+                
+                  </div>
+            </div>
+            <!--  fin post  -->
+            {{end}}
+        </div>
+    </div>
+
+     <div class="profil-comments none" id="profil-comments">
+     <label>Profil comments:</label>
+        {{range .AllComments}}
+            {{if eq .ParentId 0}}
+
+
+                <div id="comment{{.Id}}" class="simple-post" style="cursor:pointer;"onclick="location.href='/post?id={{.PostId}}'">
+                    <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                    <div class="global-post-info">
+                        <div class="profil-info">
+                            <img class="pp" src="{{.Avatar}}">
+                            <span class="user-badges">
+                        {{range .BadgesCreator}}
+                            <img  src="{{.Icon}}" title="{{.Name}}">
+                            
+                        {{end}}
+                        </span>
+                            <div class="info-creator">
+                        <span>
+                        <span class="parametre">Username:</span>
+                        {{.UserName}}
+                        </span>
+                                <span>
+                        <span class="parametre">Member since:</span>
+                        {{.RegisterDate}}
+                        </span>
+                                <span>
+                        <span class="parametre">Rank:</span>
+                        {{.UserRank}}
+                        </span>
+
+                            </div>
+                        </div>
+                        <div class="content-info">
+                    <span class="content-info-text comment-text">
+                    {{.Comment}}
+                    </span>
+                            <span class="reactionscore">
+                        <span class="parametre replies">
+                            <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                        </span>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+
+            {{else}}
+                <div id="comment{{.Id}}" class="simple-post">
+                    <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                    <div class="global-post-info">
+                        <div class="profil-info">
+                            <img class="pp" src="{{.Avatar}}">
+                            <span class="user-badges">
+                                {{range .BadgesCreator}}
+                                    <img  src="{{.Icon}}" title="{{.Name}}">
+                                {{end}}
+                            </span>
+                            <div class="info-creator">
+                                <span>
+                                    <span class="parametre">Username:</span>
+                                    {{.UserName}}
+                                    </span>
+                                <span>
+                                <span class="parametre">Member since:</span>
+                                {{.RegisterDate}}
+                                </span>
+                                <span>
+                                <span class="parametre">Rank:</span>
+                                {{.UserRank}}
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="content-info">
+                            <span class="content-parent">
+                            <a class="answer-to" href="#comment{{.ParentId}}">{{.ParentComment}}</a>
+                            </span>
+                            <span class="content-info-text comment-text">
+                            {{.Comment}}
+                            </span>
+                            <span class="reactionscore">
+                                <span class="parametre replies">
+                                    <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                                </span>                               
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {{end}}
+
+        {{end}}
+     </div>
+     <script type="text/javascript">
+        var LastSection = "profil-div"
+        var LastNavId = "profil-div-nav"
+        function GoToSection(id){
+            document.getElementById(LastSection).classList.remove("activ-div")
+            document.getElementById(LastSection).classList.add("none")
+            document.getElementById(LastSection+"-nav").classList.remove("activ")
+      
+            LastSection = id
+            document.getElementById(id+"-nav").classList.add("activ")
+            document.getElementById(id).classList.remove("none")
+            document.getElementById(id).classList.add("activ-div")
+        }
+     </script>
+     
+{{end}}

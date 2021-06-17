@@ -1,0 +1,66 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+
+
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+
+                 <div class="content-of-container">
+            <h1>{{.Ticket.Title}}</h1>
+            <div class="sub-content-ticket-chat">
+                {{ $ticketMessages := .TicketMessages }}
+                {{ $user := .User }}
+                {{range $ticketMessage := $ticketMessages}}
+                    <div class="chat {{if eq $user.Id $ticketMessage.Creator.Id}}me{{end}}">
+                        <p>
+                            {{$ticketMessage.Comment}}
+                        </p>
+                        <div class="info">
+                            <img class="avatar" src="statics/img/whale.png"/>
+                            <p>{{$ticketMessage.Creator.Username}}</p>
+                        </div>
+                    </div>
+                {{end}}
+                {{if eq .Ticket.Status 1}}
+                    <div style="align-self: center">
+                        <h3>Ticket Clos <i class="fas fa-lock"></i></h3>
+                    </div>
+                {{end}}
+                <span id="endticket"></span>
+                    </div>
+                </div>
+            </div>
+              {{if eq .Ticket.Status 0}}
+        <div class="response">
+            <form action="#endticket" method="POST">
+                <div class="create-response">
+                    <textarea name="sendticket-message" id="" cols="30" rows="3"></textarea>
+                    <button type="submit"><i class="far fa-paper-plane"></i></button>
+                </div>
+            </form>
+        </div>
+    {{else}}
+    <script type="text/javascript">
+        document.getElementById("endticket").scrollIntoView()
+    </script>
+    {{end}}
+
+    <script type="text/javascript">
+        var lockPost = document.getElementById("close-ticket")
+        var lockPostModal = document.getElementById("close-ticket-modal")
+        lockPost.addEventListener("click", () => {
+            lockPostModal.classList.toggle("active")
+            lockPostModal.scrollIntoView();
+        })
+    </script>
+              
+{{end}}

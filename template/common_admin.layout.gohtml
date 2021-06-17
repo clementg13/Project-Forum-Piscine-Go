@@ -1,0 +1,81 @@
+{{define "admin_common"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="statics/css/style.css">
+        <link rel="icon" type="image/png" href="statics/img/whale.png"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <title>{{template "title"}}</title>
+        {{template "head"}}
+    </head>
+    <body>
+    <nav>
+        <div class="nav-start">
+            <a href="/"><img class="nav-logo" src="statics/img/whale.png" alt="Navbar Logo"></a>
+            <span class="nav-separator"></span>
+            <ul>
+                <a href="/">
+                    <li class="active">Accueil</li>
+                </a>
+                <i onclick="location.href='/search'" style="cursor:pointer;" class="fas fa-search"></i>
+            </ul>
+        </div>
+        <div class="nav-end">
+            {{if .IsConnected}}
+                <a href="/tickets"><i class="far fa-comment-alt"></i></a>
+                <i class="far fa-bell"></i>
+                <span class="nav-separator"></span>
+                <div class="nav-profil">
+                    <img src="{{.User.Avatar}}" alt="">
+                    <i class="fas fa-chevron-down" id="nav-chevron"></i>
+                </div>
+                <div id="nav-dropdown" id="nav-dropdown">
+                    {{if eq .User.Permissions.AdminPanelAccess 1}}<a href="/admin">Panel D'administration</a>{{end}}
+                    <br/>
+                    <hr>
+                    <a href="/profil">Profil</a>
+                    <br/>
+                    <hr>
+                    <a href="/disconnect">Déconnexion</a>
+                </div>
+            {{end}}
+            {{if not .IsConnected}}
+                <a href="/login">Login</a>
+                <span class="nav-separator"></span>
+                <a href="/register">Register</a>
+            {{end}}
+        </div>
+    </nav>
+    <div class="container">
+        <div class="sidebar-admin">
+            <a href="admin_tickets">
+                <div class="{{if eq .Page "ticket"}}active{{end}}{{if eq .Page "ticketPage"}}active{{end}}">Tickets
+                </div>
+            </a>
+            <a href="admin_gestionusers">
+                <div class="{{if eq .Page "gestionusers"}}active{{end}}">Gestion Utilisateurs</div>
+            </a>
+            {{if eq .User.Permissions.ModifyRank 1}}
+                <a href="admin_categoriespermissions">
+                    <div class="{{if eq .Page "categoriespermissions"}}active{{end}}">Perms Catégories</div>
+                </a>
+            {{end}}
+            {{if eq .User.Permissions.Id 2}}
+                <a href="admin_myfeed">
+                    <div class="{{if eq .Page "adminmyfeed"}}active{{end}}">Mon Feed</div>
+                </a>
+            {{end}}
+            <a href="admin_stats">
+                <div class="{{if eq .Page "adminstats"}}active{{end}}">Statistiques</div>
+            </a>
+        </div>
+        {{template "main" .}}
+    </div>
+    <footer></footer>
+    <script type="text/javascript" src="statics/js/main.js"></script>
+    </body>
+    </html>
+{{end}}

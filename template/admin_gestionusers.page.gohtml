@@ -1,0 +1,110 @@
+{{template "admin_common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="content-of-container"><h1>Gestions des Utilisateurs</h1>
+        <div class="sub-content" style="margin-top:20px;display: block">
+            {{if .SuccessMessage}}
+                <div class="success-form-msg" style="margin-bottom: 15px">{{.SuccessMessage}}</div><br>{{end}}
+            {{if .ErrorMessage}}
+                <div class="error-form-msg" style="margin-bottom: 15px">{{.ErrorMessage}}</div><br>{{end}}
+            <form action="" method="post">
+                <div id="user-modify-form">
+                    <label for="id">Id</label>
+                    <input type="text" name="id" id="user-modify-form-id" readonly="readonly" style="width:30px">
+                    {{if ne .User.Permissions.Id 2}}
+                        <label for="name">Pseudo</label>
+                        <input type="text" placeholder="Ne rien Changer" name="name">
+                        <label for="email">Email</label>
+                        <input type="email" placeholder="Ne rien Changer" name="email">
+                    {{end}}
+                    {{if ne .User.Permissions.Id 2}}
+                        <label for="role">Rôle</label>
+                        <select name="role">
+                            {{range .Permissions}}
+                                <option value="{{.Id}}">{{.Name}}</option>
+                            {{end}}
+                        </select>
+                    {{end}}
+                    <label for="badges">Badges</label>
+                    <select name="badges">
+                        <option>Ne rien changer</option>
+                        {{range .Badges}}
+                            <option value="{{.Id}}">{{.Name}}</option>
+                        {{end}}
+                    </select>
+                    <label for="ban">Bannissement</label>
+                    <select name="ban">
+                        {{if ne .User.Permissions.Id 2}}
+                            <option value="100">Ne rien changer</option>
+                            <option value="1">Bannir</option>
+                            <option value="3">Utilisateur Supprimé</option>
+                            <option value="69">Supprimer</option>
+                            <option value="0">Debannir</option>
+                        {{else}}
+                             <option value="1">Bannir</option>
+                        {{end}}
+                    </select>
+                    <button type="submit">Envoyer</button>
+                </div>
+            </form>
+            <table id="table-usergestion">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Pseudo</th>
+                    <th>Email</th>
+                    <th>Date d'inscription</th>
+                    <th>Badges</th>
+                    <th>Rôle</th>
+                    <th>Bannis</th>
+                </tr>
+                </thead>
+                {{$userpermission := .User.Permissions.Id}}
+                {{range .Users}}
+                    {{$usersbadges := .Badges}}
+                    {{if ne .Permissions.Id $userpermission}}
+                        {{if ne .Permissions.Id 3}}
+                            <tr>
+                                <th>{{.Id}}</th>
+                                <th>{{.Username}}</th>
+                                <th>{{.Email}}</th>
+                                <th>{{.RegisterDate}}</th>
+                                <th>{{if $usersbadges}} | {{range $badge := $usersbadges}}{{$badge.Name}} | {{end}}{{else}}Aucun Badges{{end}}</th>
+                                <th>{{.Permissions.Name}}</th>
+                                <th>{{if eq .Ban 0}}-{{else}}<span style="color: #824141">Bannis</span>{{end}}</th>
+                                <th data-user-id="{{.Id}}"><i style="cursor: pointer" class="fas fa-user-edit user-edit"></i>
+                                </th>
+                            </tr>
+                        {{end}}
+                    {{end}}
+                {{end}}
+            </table>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        let FormUserModify = document.getElementById("user-modify-form")
+        let FormUserModifyId = document.getElementById("user-modify-form-id")
+        let UserEditIcon = document.querySelectorAll(".user-edit")
+
+        UserEditIcon.forEach((e) => {
+            e.addEventListener("click", () => {
+                FormUserModify.classList.add("active")
+                FormUserModifyId.value = e.parentElement.dataset.userId
+                FormUserModify.scrollTo()
+            })
+        })
+    </script>
+{{end}}

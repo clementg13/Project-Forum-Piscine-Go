@@ -1,0 +1,59 @@
+{{template "admin_common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="content-of-container" style="height: auto">
+        <h1>Statistiques :</h1>
+        <div class="sub-content" style="height: auto;justify-content: center;">
+            <div class="ticket-card" style="height: auto;width:auto;text-align: center;">
+                <h3>Nombres de Posts</h3>
+                <p class="text-center admin-stat-p">{{if .PostNumber}}{{.PostNumber}}{{else}}Rien sur cette Période{{end}}</p>
+            </div>
+            <div class="ticket-card" style="height: auto;width:auto;text-align: center;">
+                <h3>Nombres de Catégories</h3>
+                <p class="text-center admin-stat-p">{{if .CategoryNumber}}{{.CategoryNumber}}{{else}}Rien sur cette Période{{end}}</p>
+            </div>
+            <div class="ticket-card" style="height: auto;width:auto;text-align: center;">
+                <h3>Nombres de Sous-Catégories</h3>
+                <p class="text-center admin-stat-p">{{if .SubCategoryNumber}}{{.SubCategoryNumber}}{{else}}Rien sur cette Période{{end}}</p>
+            </div>
+            <div class="ticket-card" style="height: auto;width:auto;text-align: center;">
+                <h3>Nombres de Commentaires</h3>
+                <p class="text-center admin-stat-p">{{if .CommentNumber}}{{.CommentNumber}}{{else}}Rien sur cette Période{{end}}</p>
+            </div>
+            <div class="ticket-card" style="height: auto;width:auto;text-align: center;">
+                <h3>Moyennes des Réactions</h3>
+                <p class="text-center admin-stat-p">{{if .VotesStats}}{{.VotesStats}}{{else}}Rien sur cette Période{{end}}</p>
+            </div>
+        </div>
+        <h2>Statistique sur une période définie :</h2>
+        <form action="" method="post">
+            <label for="startdate">du :</label>
+            <input type="date" id="startdate" name="startdate" value="">
+            <label for="enddate">au :</label>
+            <input type="date" id="enddate" name="enddate" value="">
+            <input type="submit" value="Envoyer">
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById("startdate").value = today
+        document.getElementById("enddate").value = today
+    </script>
+{{end}}

@@ -1,0 +1,24 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    New ticket
+{{end}}
+
+
+
+{{define "main"}}
+    <form action="" method="POST" class="register-form">
+        <label>New ticket</label><br>
+        <input type="text" placeholder="Title" name="title" value="" required>
+        <input type="text" placeholder="Subject" name="subject" value="" required>
+        <div><input id="submitButton"  type="submit" value="submit" /></div>
+    </form>
+
+{{end}}
+
+

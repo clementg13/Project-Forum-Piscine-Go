@@ -1,0 +1,32 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Register
+{{end}}
+
+<!-- banner (if necessary) -->
+{{define "banner"}}
+{{end}}
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+
+    <form class="register-form" method="POST" action="" name="registrationForm">
+        <div id="formtitle-registration"><h3>Registration</h3></div>
+        <div><input placeholder="Pseudo" id="pseudo"name="pseudo" type="text" value="{{if .Pseudo}}{{.Pseudo}}{{end}}"  required /></div>
+        <div><input placeholder="Email" id="email" name="email" type="text" value="{{if .Email}}{{.Email}}{{end}}"  required /></div>
+        <div><input placeholder="Password"id="password" name="password" type="password" required /></div>
+        <div><input class="submitButton"  type="submit" value="submit" /></div>
+        {{if .ErrorMessage}}
+            <div class="error-form-msg">{{.ErrorMessage}}</div>
+        {{end}}
+        {{if .SuccessMessage}}
+            <div class="success-form-msg">{{.SuccessMessage}}</div>
+        {{end}}
+    </form>
+{{end}}

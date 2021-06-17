@@ -1,0 +1,78 @@
+{{template "admin_common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="content-of-container"><h1>Gestions des Catégories</h1>
+        {{if .SuccessMessage}}
+            <div class="success-form-msg" style="margin-bottom: 15px">{{.SuccessMessage}}</div><br>{{end}}
+        {{if .ErrorMessage}}
+            <div class="error-form-msg" style="margin-bottom: 15px">{{.ErrorMessage}}</div><br>{{end}}
+        <table id="table-usergestion" style="margin-top: 20px;">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Pseudo</th>
+                <th>Categorie associés</th>
+            </tr>
+            </thead>
+            {{ $userCategories := .UserCategory }}
+            {{ range $userCategory := $userCategories }}
+                {{ $userCategoriesInfos := $userCategory.Category }}
+                {{if eq $userCategory.UserInfo.Permissions.Id 2}}
+                    <tr>
+                        <th>{{$userCategory.Id}}</th>
+                        <th>{{$userCategory.UserInfo.Username}}</th>
+                        <th>{{ range $userCategoriesInfo := $userCategoriesInfos }}
+                                {{$userCategoriesInfo.Title}}&nbsp;
+                            {{end}}</th>
+                        <th data-user-id="{{.Id}}"><i style="cursor: pointer" class="fas fa-user-edit user-edit"></i></th>
+                    </tr>
+                {{end}}
+            {{end}}
+        </table>
+        <form action="" method="post">
+            <div id="user-modify-form">
+                <h4>Ajouter/Supr Category for user</h4>
+                <label for="id">Id</label>
+                <input type="text" name="id" id="user-modify-form-id" readonly="readonly" style="width:30px">
+                <label for="deleteadd">Ajouter/Supr</label>
+                <select name="deleteadd">
+                    <option value="1">Ajouter</option>
+                    <option value="2">Supprimer</option>
+                </select>
+                <label for="category">Ajouter/Supr</label>
+                <select name="category">
+                    {{range .Category}}
+                        <option value="{{.Id}}">{{.Title}}</option>
+                    {{end}}
+                </select>
+                <button type="submit">Envoyer</button>
+            </div>
+        </form>
+    </div>
+  
+
+    <script type="text/javascript">
+        let FormUserModify = document.getElementById("user-modify-form")
+        let FormUserModifyId = document.getElementById("user-modify-form-id")
+        let UserEditIcon = document.querySelectorAll(".user-edit")
+
+        UserEditIcon.forEach((e) => {
+            e.addEventListener("click", () => {
+                FormUserModify.classList.add("active")
+                FormUserModifyId.value = e.parentElement.dataset.userId
+                FormUserModify.scrollTo()
+            })
+        })
+    </script>
+{{end}}

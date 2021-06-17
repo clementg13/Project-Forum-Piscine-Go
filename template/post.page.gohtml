@@ -1,0 +1,839 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Post
+{{end}}
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+
+    {{$IsConnected := .IsConnected}}
+    {{$IsAuthorized := .IsAuthorized}}
+    {{$ConnectedUser := .User.Username}}
+    {{if eq .Post.Status 1}}
+        {{if eq $ConnectedUser .Post.UserName}}
+        
+    
+    <div class="simple-post">
+        <div class="creation-date-banner">{{.Post.CreationDate}}</div>     
+        <div class="sharing"><i title="Copy the post link" style="cursor:pointer;" class="far fa-share-square"></i></div>
+        <div class="global-post-info">
+            <div class="profil-info">
+                <img class="pp" src="{{.Post.Avatar}}">
+                <span class="user-badges">
+                    {{range .Post.BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                    {{end}}
+                    </span>
+                <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.Post.UserName}}
+                    </span>
+                    <span>
+                    <span class="parametre">Member since:</span>
+                    {{.Post.RegisterDate}}
+                    </span>
+                    <span>
+                    <span class="parametre">Rank:</span>
+                    {{.Post.UserRank}}
+                    </span>
+
+                </div>
+            </div>
+            <div class="content-info">
+                <span class="title">
+                    <h3>{{.Post.Title}}</h3>
+                </span>
+                <span class="content-info-text">
+                {{.Post.Subject}}
+                </span>
+                <span class="reactionscore">
+                    <span class="parametre replies">
+                    {{.Post.NumberOfComments}} replies <!--insérer le nombre de reponse -->
+                    </span>
+                    <span class="parametre replies">
+                        <span id="like{{.Post.Id}}postscore">{{.Post.Votes}}</span> Votes
+                    </span>
+                    <span class="red">Post deleted</span>
+                </span>
+            </div>
+            </div>
+        </div>
+    {{range .Post.Comment}}
+        {{if eq .ParentId 0}}
+
+
+            <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                     
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                    {{range .BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                    {{end}}
+                    </span>
+                        <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.UserName}}
+                    </span>
+                            <span>
+                    <span class="parametre">Member since:</span>
+                    {{.RegisterDate}}
+                    </span>
+                            <span>
+                    <span class="parametre">Rank:</span>
+                      {{.UserRank}}
+                    </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                <span class="content-info-text comment-text">
+                 {{.Comment}}
+                </span>
+                        <span class="reactionscore">
+                    <span class="parametre replies">
+                        <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                    </span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+
+
+        {{else}}
+            <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                     
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                            {{range .BadgesCreator}}
+                                 <img  src="{{.Icon}}" title="{{.Name}}">
+                             {{end}}
+                        </span>
+                        <div class="info-creator">
+                            <span>
+                                <span class="parametre">Username:</span>
+                                {{.UserName}}
+                                </span>
+                            <span>
+                            <span class="parametre">Member since:</span>
+                            {{.RegisterDate}}
+                            </span>
+                            <span>
+                            <span class="parametre">Rank:</span>
+                              {{.UserRank}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                        <span class="content-parent">
+                        <a class="answer-to" href="#comment{{.ParentId}}">{{.ParentComment}}</a>
+                        </span>
+                        <span class="content-info-text comment-text">
+                        {{.Comment}}
+                        </span>
+                        <span class="reactionscore">
+                            <span class="parametre replies">
+                                <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                            </span>
+                             <span class="com-like">
+                            <span>
+                            </span>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        {{end}}
+        {{else if $IsAuthorized}}
+            
+    <div class="simple-post">
+        <div class="creation-date-banner">{{.Post.CreationDate}}</div>     
+        <div class="sharing"><i title="Copy the post link" style="cursor:pointer;" class="far fa-share-square"></i></div>
+        <div class="global-post-info">
+
+            <div class="profil-info">
+                <img class="pp" src="{{.Post.Avatar}}">
+                <span class="user-badges">
+                    {{range .Post.BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                    {{end}}
+                    </span>
+                <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.Post.UserName}}
+                    </span>
+                    <span>
+                    <span class="parametre">Member since:</span>
+                    {{.Post.RegisterDate}}
+                    </span>
+                    <span>
+                    <span class="parametre">Rank:</span>
+                    {{.Post.UserRank}}
+                    </span>
+
+                </div>
+            </div>
+            <div class="content-info">
+                <span class="title">
+                    <h3>{{.Post.Title}}</h3>
+                </span>
+                <span class="content-info-text">
+                {{.Post.Subject}}
+                </span>
+                <span class="reactionscore">
+                    <span class="parametre replies">
+                    {{.Post.NumberOfComments}} replies <!--insérer le nombre de reponse -->
+                    </span>
+                    <span class="parametre replies">
+                        <span id="like{{.Post.Id}}postscore">{{.Post.Votes}}</span> Votes
+                    </span>
+                    <span class="red">Post deleted</span>
+                </span>
+            </div>
+            </div>
+        </div>
+    {{range .Post.Comment}}
+        {{if eq .ParentId 0}}  
+            {{if eq .Status 0}}
+
+
+            <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                     
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                    {{range .BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                    {{end}}
+                    </span>
+                        <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.UserName}}
+                    </span>
+                            <span>
+                    <span class="parametre">Member since:</span>
+                    {{.RegisterDate}}
+                    </span>
+                            <span>
+                    <span class="parametre">Rank:</span>
+                      {{.UserRank}}
+                    </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                <span class="content-info-text comment-text">
+                 {{.Comment}}
+                </span>
+                        <span class="reactionscore">
+                    <span class="parametre replies">
+                        <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                    </span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                    {{range .BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                    {{end}}
+                    </span>
+                        <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.UserName}}
+                    </span>
+                            <span>
+                    <span class="parametre">Member since:</span>
+                    {{.RegisterDate}}
+                    </span>
+                            <span>
+                    <span class="parametre">Rank:</span>
+                      {{.UserRank}}
+                    </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                <span class="content-info-text comment-text">
+                 {{.Comment}}
+                </span>
+                        <span class="reactionscore">
+                    <span class="parametre replies">
+                        <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                           <span class="red">Post deleted</span>
+            
+                    </span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+
+        {{else}}
+            <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                      
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                            {{range .BadgesCreator}}
+                                 <img  src="{{.Icon}}" title="{{.Name}}">
+                             {{end}}
+                        </span>
+                        <div class="info-creator">
+                            <span>
+                                <span class="parametre">Username:</span>
+                                {{.UserName}}
+                                </span>
+                            <span>
+                            <span class="parametre">Member since:</span>
+                            {{.RegisterDate}}
+                            </span>
+                            <span>
+                            <span class="parametre">Rank:</span>
+                              {{.UserRank}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                        <span class="content-parent">
+                        <a class="answer-to" href="#comment{{.ParentId}}">{{.ParentComment}}</a>
+                        </span>
+                        <span class="content-info-text comment-text">
+                        {{.Comment}}
+                        </span>
+                        <span class="reactionscore">
+                            <span class="parametre replies">
+                                <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                            </span>
+                             <span class="com-like">
+                            <span>
+                            </span>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        {{end}}
+        {{else}}
+            <h2 style="justify-self:center;align-self:center;text-align:center;"> COMMENT DELETED</br><a href="/" style="text-decoration:underline;">Go back to main page</a></h2>
+        {{end}}
+    {{else if ne .Post.Status 1}}
+    <div class="simple-post">
+        <div class="creation-date-banner">{{.Post.CreationDate}}</div>     
+        <div class="sharing"><i title="Copy the post link" style="cursor:pointer;" class="far fa-share-square"></i></div>
+        {{if $IsAuthorized}}
+        <div class="ModoInterfaceDelete">
+            <span>
+            <input placeholer="justification..."type="text"id="{{.Post.Id}}deletejustification" value="">
+            <button onclick="DeletePostModo({{.Post.Id}},document.getElementById('{{.Post.Id}}deletejustification').value)">Delete the post</button>
+             </span>
+            <span>
+            <input id="datepost{{.Post.Id}}" type="date">
+            <button onclick="PromotePost({{.Post.Id}},document.getElementById('datepost{{.Post.Id}}').value)">Promote this post<br/>(Choose the expiration date)</button>
+            </span>
+        </div>
+        {{end}}
+        <div class="global-post-info">
+            <div class="profil-info">
+                <img class="pp" src="{{.Post.Avatar}}">
+                <span class="user-badges">
+                    {{range .Post.BadgesCreator}}
+                        <img src="{{.Icon}}" title="{{.Name}}">
+                    {{end}}
+                    </span>
+                <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.Post.UserName}}
+                    </span>
+                    <span>
+                    <span class="parametre">Member since:</span>
+                    {{.Post.RegisterDate}}
+                    </span>
+                    <span>
+                    <span class="parametre">Rank:</span>
+                    {{.Post.UserRank}}
+                    </span>
+
+                </div>
+            </div>
+            <div class="content-info">
+                <span class="title">
+                    <h3>{{.Post.Title}}</h3>
+                </span>
+                <span class="content-info-text">
+                {{.Post.Subject}}
+                </span>
+                <span class="reactionscore">
+                    <span class="parametre replies">
+                    {{.Post.NumberOfComments}} replies <!--insérer le nombre de reponse -->
+                    </span>
+                    <span class="parametre replies">
+                        <span id="like{{.Post.Id}}postscore">{{.Post.Votes}}</span> Votes
+                    </span>
+                    {{if $IsConnected}}
+                        {{if .Post.LikedByUser}}
+                            <span>
+                            <i id="like{{.Post.Id}}post" like="1" onclick="Like({{.Post.Id}},'post')" title="Like"
+                            class="fas fa-heart greyfont select red"></i>
+                            </span>
+                            <span>
+                            <i id="dislike{{.Post.Id}}post" dislike="0" onclick="Dislike({{.Post.Id}},'post')" title="Dislike"
+                            class="fas fa-heart-broken greyfont select"></i>
+                            </span>
+                           
+                        {{else if .Post.DislikedByUser}}
+                            <span>
+                            <i id="like{{.Post.Id}}post" like="0" onclick="Like({{.Post.Id}},'post')" title="Like"
+                            class="fas fa-heart greyfont select"></i>
+                            </span>
+                            <span>
+                            <i id="dislike{{.Post.Id}}post" dislike="1" onclick="Dislike({{.Post.Id}},'post')" title="Dislike"
+                            class="fas fa-heart-broken greyfont select red"></i>
+                            </span>
+                        {{else}}
+                            <span>
+                            <i id="like{{.Post.Id}}post" like="0" onclick="Like({{.Post.Id}},'post')" title="Like"
+                            class="fas fa-heart greyfont select"></i>
+                            </span>
+                            <span>
+                            <i id="dislike{{.Post.Id}}post" dislike="0" onclick="Dislike({{.Post.Id}},'post')" title="Dislike"
+                            class="fas fa-heart-broken greyfont select"></i>
+                            </span>
+                            {{end}}
+                            {{if eq $ConnectedUser .Post.UserName}}
+                            <button class="red" onclick="DeletePost({{.Post.Id}})">Delete post</button>
+                            {{end}}
+                             <a href="#postform" onclick="PostReply()" class="parametre replies comment_button">Add comment</a>
+                        
+                    {{end}}
+                    </span>
+            </div>
+        </div>
+    </div>
+  
+    {{range .Post.Comment}}
+        {{if eq .ParentId 0}}
+
+
+            <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                   {{if $IsAuthorized}}
+                        <div class="ModoInterfaceDelete">
+                            <span>
+                            <input  placeholer="justification..."id="{{.Id}}deletejustificationcomment" type="text" value="">
+                            <button onclick="DeleteCommentModo({{.Id}},document.getElementById('{{.Id}}deletejustificationcomment').value)">Delete this comment</button>
+                            </span>
+                            <span>
+                            <input id="datecomment{{.Id}}" type="date">
+                            <button onclick="PromoteComment({{.Id}},document.getElementById('datecomment{{.Id}}').value)">Promote this comment<br/>(Choose the expiration date)</button>
+                            </span>
+                        </div>
+                    {{end}}
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                    {{range .BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                        
+                    {{end}}
+                    </span>
+                        <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.UserName}}
+                    </span>
+                            <span>
+                    <span class="parametre">Member since:</span>
+                    {{.RegisterDate}}
+                    </span>
+                            <span>
+                    <span class="parametre">Rank:</span>
+                      {{.UserRank}}
+                    </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                <span class="content-info-text comment-text">
+                 {{.Comment}}
+                </span>
+                        <span class="reactionscore">
+                    <span class="parametre replies">
+                        <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                    </span>
+                    {{if $IsConnected}}
+                    {{if .LikedByUser}}
+                     <span class="com-like">
+                        <span>
+                        <i id="like{{.Id}}" like="1" onclick="Like({{.Id}},'')" title="Like"
+                        class="fas fa-heart greyfont select red"></i>
+                        </span>
+                        <span>
+                        <i id="dislike{{.Id}}" dislike="0" onclick="Dislike({{.Id}},'')" title="Dislike"
+                        class="fas fa-heart-broken greyfont select"></i>
+                        </span>
+                    </span>
+                    {{else if .DislikedByUser}}
+                     <span class="com-like">
+                        <span>
+                        <i id="like{{.Id}}" like="0" onclick="Like({{.Id}},'')" title="Like"
+                        class="fas fa-heart greyfont select"></i>
+                        </span>
+                        <span>
+                        <i id="dislike{{.Id}}" dislike="1" onclick="Dislike({{.Id}},'')" title="Dislike"
+                        class="fas fa-heart-broken greyfont select red"></i>
+                        </span>
+                    </span>
+                    {{else}}
+                    <span class="com-like">
+                        <span>
+                        <i id="like{{.Id}}" like="0" onclick="Like({{.Id}},'')" title="Like"
+                        class="fas fa-heart greyfont select"></i>
+                        </span>
+                        <span>
+                        <i id="dislike{{.Id}}" dislike="0" onclick="Dislike({{.Id}},'')" title="Dislike"
+                        class="fas fa-heart-broken greyfont select"></i>
+                        </span>
+                    </span>
+                       {{end}}
+                      
+                         <a href="#postform" onclick="SubComment({{.Id}},'{{.UserName}}')" class="parametre replies comment_button">
+                       Add response
+                       </a>
+                    {{end}}
+                    </span>
+                    </div>
+                </div>
+            </div>
+
+
+        {{else}}
+            <div id="comment{{.Id}}" class="simple-post">
+                {{if $IsAuthorized}}
+                        <div class="ModoInterfaceDelete">
+                            <span>
+                            <input placeholer="justification..."id="{{.Id}}deletejustificationcomment" type="text" value="">
+                            <button onclick="DeleteCommentModo({{.Id}},document.getElementById('{{.Id}}deletejustificationcomment').value)">Delete this comment</button>
+                             </span>
+                            <span>
+                            <input id="datecomment{{.Id}}" type="date">
+                            <button onclick="PromoteComment({{.Id}},document.getElementById('datecomment{{.Id}}').value)">Promote this comment<br/>(Choose the expiration date)</button>
+                            </span>
+                        </div>
+                    {{end}}
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                            {{range .BadgesCreator}}
+                                <img  src="{{.Icon}}" title="{{.Name}}">
+                            {{end}}
+                        </span>
+                        <div class="info-creator">
+                            <span>
+                                <span class="parametre">Username:</span>
+                                {{.UserName}}
+                                </span>
+                            <span>
+                            <span class="parametre">Member since:</span>
+                            {{.RegisterDate}}
+                            </span>
+                            <span>
+                            <span class="parametre">Rank:</span>
+                              {{.UserRank}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                        <span class="content-parent">
+                        <a class="answer-to" href="#comment{{.ParentId}}">{{.ParentComment}}</a>
+                        </span>
+                        <span class="content-info-text comment-text">
+                        {{.Comment}}
+                        </span>
+                        <span class="reactionscore">
+                            <span class="parametre replies">
+                                <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                            </span>
+                             <span class="com-like">
+                            <span>
+                            {{if $IsConnected}}
+                            {{if .LikedByUser}}
+                              <i id="like{{.Id}}" like="1" onclick="Like({{.Id}},'')" title="Like"
+                               class="fas fa-heart greyfont select red"></i>
+                            </span>
+                            <span>
+                            <i id="dislike{{.Id}}" dislike="0" onclick="Dislike({{.Id}},'')" title="Dislike"
+                               class="fas fa-heart-broken greyfont select"></i>
+                            </span>
+                            </span>
+                            {{else if .DislikedByUser}}
+                              <i id="like{{.Id}}" like="0" onclick="Like({{.Id}},'')" title="Like"
+                               class="fas fa-heart greyfont select"></i>
+                            </span>
+                            <span>
+                            <i id="dislike{{.Id}}" dislike="1" onclick="Dislike({{.Id}},'')" title="Dislike"
+                               class="fas fa-heart-broken greyfont select red"></i>
+                            </span>
+                            </span>
+                            {{else}}
+                             <i id="like{{.Id}}" like="0" onclick="Like({{.Id}},'')" title="Like"
+                               class="fas fa-heart greyfont select"></i>
+                            </span>
+                            <span>
+                            <i id="dislike{{.Id}}" dislike="0" onclick="Dislike({{.Id}},'')" title="Dislike"
+                               class="fas fa-heart-broken greyfont select"></i>
+                            </span>
+                            </span>
+                            {{end}}
+                            
+                            <a href="#postform" onclick="SubComment({{.Id}},'{{.UserName}}')"
+                               class="parametre replies comment_button">Add response</a>
+                               {{end}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+
+    {{end}}
+    {{if $IsConnected}}
+    <form id="postform" class="commentForm" method="POST" action="" name="commentForm">
+        <!--faire un redirect sur la page-->
+        <label>Comment...</label>
+        <i id="abort-reply" onclick="PostReply()" title="Reply to the post"
+           style="display:none;position:absolute;right:18px;top:38px;" class="far fa-times-circle select"></i>
+        <textarea placeholder="Your response to the post..." id="content" style="margin-top:28px;" name="content"
+                  type="text" value=""required></textarea>
+        <!--rajouter la croix pour arreter de repondre au commentaire-->
+        {{/* <input id="userId" name="userId" value="3" style="display:none;"/> */}}
+        <!--rajouter le userId par cookie et non form-->
+        <input id="commentId" name="commentId" value="0" style="display:none;" required/>
+        <!--rajouter le userId + en go faire en sorte que si comment id et post id sont changé bloquer la requete-->
+        <input id="postId" name="postId" value="{{.Post.Id}}" style="display:none;" required/>
+        <!--rajouter le userId  + en go faire en sorte que si comment id et post id sont changé bloquer la requete-->
+        <button id="submitButton" type="submit"><i class="far fa-paper-plane"></i></button>
+    </form>
+    <a href="#postform" id="post-creation-button">Create comment <i class="fas fa-caret-down"></i></a>
+    <script type="text/javascript">
+        function SubComment(id, username) {
+            document.getElementById("commentId").value = id;
+            document.getElementById("content").placeholder = "Replying to " + username + "...";
+            document.getElementById("abort-reply").style.display = "block";
+            document.getElementById("content").value = "";
+        }
+ 
+        function PostReply() {
+            document.getElementById("content").value = "";
+            document.getElementById("commentId").value = 0;
+            document.getElementById("content").placeholder = "Your response to the post...";
+            document.getElementById("abort-reply").style.display = "none";
+        }
+
+        function Like(id, type) {
+            likeid = "like" + id + type
+            dislikeid = "dislike" + id + type
+            increment = likeid + "score"
+            if (document.getElementById(likeid).getAttribute("like") == 0 && document.getElementById(dislikeid).getAttribute("dislike") == 0) {
+                document.getElementById(likeid).setAttribute("like", 1)
+                document.getElementById(increment).textContent = parseInt(document.getElementById(increment).textContent) + 1
+                document.getElementById(likeid).style.color = "red";
+                if (type == "post") {
+                    sendLike(1, 0, id, 0)
+                } else {
+                    sendLike(1, 0, 0, id)
+                }
+            } else if (document.getElementById(likeid).getAttribute("like") == 1) {
+                document.getElementById(increment).textContent = parseInt(document.getElementById(increment).textContent) - 1
+                document.getElementById(likeid).setAttribute("like", 0)
+                document.getElementById(likeid).style.color = "#b3b3b3";
+                if (type == "post") {
+                    sendLike(-1, 0, id, 0)
+                } else {
+                    sendLike(-1, 0, 0, id)
+                }
+            } else if (document.getElementById(likeid).getAttribute("like") == 0 && document.getElementById(dislikeid).getAttribute("dislike") == 1) {
+                document.getElementById(dislikeid).setAttribute("dislike", 0)
+                document.getElementById(increment).textContent = parseInt(document.getElementById(increment).textContent) + 2
+                document.getElementById(likeid).setAttribute("like", 1)
+                document.getElementById(dislikeid).style.color = "#b3b3b3";
+                document.getElementById(likeid).style.color = "red";
+                if (type == "post") {
+                    sendLike(1, -1, id, 0)
+                } else {
+                    sendLike(1, -1, 0, id)
+                }
+            }
+        }
+
+        function Dislike(id, type) {
+            likeid = "like" + id + type
+            dislikeid = "dislike" + id + type
+            increment = likeid + "score"
+            if (document.getElementById(dislikeid).getAttribute("dislike") == 0 && document.getElementById(likeid).getAttribute("like") == 0) {
+                document.getElementById(dislikeid).setAttribute("dislike", 1)
+                document.getElementById(increment).textContent = parseInt(document.getElementById(increment).textContent) - 1
+                document.getElementById(dislikeid).style.color = "red";
+                if (type == "post") {
+                    sendLike(0, 1, id, 0)
+                } else {
+                    sendLike(0, 1, 0, id)
+                }
+            } else if (document.getElementById(dislikeid).getAttribute("dislike") == 1) {
+                document.getElementById(increment).textContent = parseInt(document.getElementById(increment).textContent) + 1
+                document.getElementById(dislikeid).setAttribute("dislike", 0)
+                document.getElementById(dislikeid).style.color = "#b3b3b3";
+                if (type == "post") {
+                    sendLike(0, -1, id, 0)
+                } else {
+                    sendLike(0, -1, 0, id)
+                }
+            } else if (document.getElementById(dislikeid).getAttribute("dislike") == 0 && document.getElementById(likeid).getAttribute("like") == 1) {
+                document.getElementById(likeid).setAttribute("like", 0)
+                document.getElementById(increment).textContent = parseInt(document.getElementById(increment).textContent) - 2
+                document.getElementById(dislikeid).setAttribute("dislike", 1)
+                document.getElementById(likeid).style.color = "#b3b3b3";
+                document.getElementById(dislikeid).style.color = "red";
+                if (type == "post") {
+                    sendLike(-1, 1, id, 0)
+                } else {
+                    sendLike(-1, 1, 0, id)
+                }
+            }
+
+        }
+
+        function sendLike(like, dislike, postId, commentId) {
+            var data = new URLSearchParams();
+            data.append("like", like);
+            data.append("dislike", dislike);
+            data.append("userId", {{.User.Id}}); // a changer grace a la session
+            data.append("postId", postId);
+            data.append("commentId", commentId);
+            fetch(window.location.protocol + "//" + window.location.host + "/" + "sendlike", {
+                method: 'post',
+                body: data
+            });
+        }
+        var count = 0
+         function  DeletePost(postId) {
+             if (count == 0){
+                 count++
+            var data = new URLSearchParams();
+            data.append("id", postId);
+            data.append("type", "post");
+            fetch(window.location.protocol + "//" + window.location.host + "/deletepost", {
+                method: 'post',
+                body: data
+            });
+            setTimeout(function(){ location.reload()}, 500);
+
+             }
+         }
+    </script>
+     {{else}}
+        {{end}}
+    {{if $IsAuthorized}}
+
+    <script type="text/javascript">
+          var count_post = 0
+         function  DeletePostModo(postId,justification) {
+             if (count_post == 0){
+                 count_post++
+            var data = new URLSearchParams();
+            data.append("id", postId);
+            data.append("justification", justification);
+            fetch(window.location.protocol + "//" + window.location.host + "/deletepostmodo", {
+                method: 'post',
+                body: data
+            });
+            setTimeout(function(){ location.reload()}, 500);
+
+             }
+             
+         }
+           var count_comment = 0
+          function  DeleteCommentModo(postId,justification) {
+             if (count_comment == 0){
+                 count_comment++
+            var data = new URLSearchParams();
+            data.append("id", postId);
+            data.append("justification", justification);
+            fetch(window.location.protocol + "//" + window.location.host + "/deletecommentmodo", {
+                method: 'post',
+                body: data
+            });
+            setTimeout(function(){ location.reload()}, 500);
+
+             }
+             
+         }
+         var count_promote = 0
+         function PromotePost(id, expirationdate) {
+             if (count_promote == 0){
+                 count_promote++
+            var data = new URLSearchParams();
+            data.append("postId", id);
+            data.append("expiration", expirationdate);
+            fetch(window.location.protocol + "//" + window.location.host + "/promotepost", {
+                method: 'post',
+                body: data
+            });
+            setTimeout(function(){ location.reload()}, 500);
+
+             }
+         }
+         var count_promote_comment = 0
+         function PromoteComment(id, expirationdate) {
+             if (count_promote_comment == 0){
+                 count_promote_comment++
+            var data = new URLSearchParams();
+            data.append("commentId", id);
+            data.append("expiration", expirationdate);
+            fetch(window.location.protocol + "//" + window.location.host + "/promotecomment", {
+                method: 'post',
+                body: data
+            });
+            setTimeout(function(){ location.reload()}, 500);
+
+             }
+         }
+
+    </script>
+    
+    {{end}}
+  
+ 
+    {{end}}
+{{end}}
+

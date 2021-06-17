@@ -1,0 +1,203 @@
+
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    All posts & comments
+{{end}}
+
+
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="search-div">
+        <h3>Search some keywords  <br/>to get corresponding posts and comments</h3>
+    <form id="searchbar"action="" type="GET">
+        <input id="searcharea"placeholder="Your search here..."type="search" name="research" value="">
+        <i id="searchfav" class="fa fa-search"></i>
+    </form>
+    </div>
+    <div class="mainContainer" id="searchpagecenter">
+
+    <h2 style="text-align:center;">All Posts</pre></h2>
+
+  {{range .AllPosts}}
+<!--  début post  -->
+  <div class="post-preview" onclick="location.href='/post?id={{.Id}}'">
+    <div class="pp-post" >
+      <img src="{{.Avatar}}">
+    </div>
+    <div class="post-info">
+      
+      <div class="title-post">
+        <h3>{{.Title}}</h3>    
+      </div>
+      
+      <div class="title-info">
+        <span class="username"><strong>{{.UserName}}</strong></span>
+        <span class="creation-date">{{.CreationDate}}</span>
+        <span class="comments">{{.NumberOfComments}} Replies</span>
+        <span class="likes">{{.Votes}} Likes</span>
+      </div>
+      <div class="profil-pics">
+        <img src="https://image.flaticon.com/icons/png/512/4652/4652640.png">
+        <img src="https://image.flaticon.com/icons/png/512/4652/4652650.png">
+        <img src="https://image.flaticon.com/icons/png/512/4652/4652660.png">
+        <img src="https://image.flaticon.com/icons/png/512/4652/4652670.png">
+      </div>
+    </div>
+  </div>
+<!--  fin post  -->
+{{end}}
+</div>
+       <div class="mainContainer" id="searchpagecenter">
+          
+    <h2 style="text-align:center;">All Comments</pre></h2>
+      {{range .AllComments}}
+        {{if eq .ParentId 0}}
+            <div id="comment{{.Id}}" class="simple-post commentlist"  style="cursor:pointer;" onclick="location.href='/post?id={{.Id}}'">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                    {{range .BadgesCreator}}
+                        <img  src="{{.Icon}}" title="{{.Name}}">
+                        
+                    {{end}}
+                    </span>
+                        <div class="info-creator">
+                    <span>
+                    <span class="parametre">Username:</span>
+                    {{.UserName}}
+                    </span>
+                            <span>
+                    <span class="parametre">Member since:</span>
+                    {{.RegisterDate}}
+                    </span>
+                            <span>
+                    <span class="parametre">Rank:</span>
+                      {{.UserRank}}
+                    </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                <span class="content-info-text comment-text">
+                 {{.Comment}}
+                </span>
+                        <span class="reactionscore">
+                    <span class="parametre replies">
+                        <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                    </span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+                 <div id="comment{{.Id}}" class="simple-post  commentlist" style="cursor:pointer;" onclick="location.href='/post?id={{.PostId}}'">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                            {{range .BadgesCreator}}
+                                <img  src="{{.Icon}}" title="{{.Name}}">
+                            {{end}}
+                        </span>
+                        <div class="info-creator">
+                            <span>
+                                <span class="parametre">Username:</span>
+                                {{.UserName}}
+                                </span>
+                            <span>
+                            <span class="parametre">Member since:</span>
+                            {{.RegisterDate}}
+                            </span>
+                            <span>
+                            <span class="parametre">Rank:</span>
+                              {{.UserRank}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                        <span class="content-parent">
+                        <a class="answer-to" href="#comment{{.ParentId}}">{{.ParentComment}}</a>
+                        </span>
+                        <span class="content-info-text comment-text">
+                        {{.Comment}}
+                        </span>
+                        <span class="reactionscore">
+                            <span class="parametre replies">
+                                <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                            </span>
+                             <span class="com-like">
+                            <span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        {{/* {{end}}
+
+      </div> 
+            {{end}}
+
+  {{end}}
+             
+            {{/* <div id="comment{{.Id}}" class="simple-post">
+                <div class="creation-date-banner iscom">{{.CreationDate}}</div>
+                <div class="global-post-info">
+                    <div class="profil-info">
+                        <img class="pp" src="{{.Avatar}}">
+                        <span class="user-badges">
+                            {{range .BadgesCreator}}
+                                <img  src="{{.Icon}}" title="{{.Name}}">
+                            {{end}}
+                        </span>
+                        <div class="info-creator">
+                            <span>
+                                <span class="parametre">Username:</span>
+                                {{.UserName}}
+                                </span>
+                            <span>
+                            <span class="parametre">Member since:</span>
+                            {{.RegisterDate}}
+                            </span>
+                            <span>
+                            <span class="parametre">Rank:</span>
+                              {{.UserRank}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="content-info">
+                        <span class="content-parent">
+                        <a class="answer-to" href="#comment{{.ParentId}}">{{.ParentComment}}</a>
+                        </span>
+                        <span class="content-info-text comment-text">
+                        {{.Comment}}
+                        </span>
+                        <span class="reactionscore">
+                            <span class="parametre replies">
+                                <span id="like{{.Id}}score">{{.Votes}}</span> Votes
+                            </span>
+                             <span class="com-like">
+                            <span>
+                        </span>
+                    </div>
+                </div>
+            </div> */}}
+        {{/* {{end}}
+
+      </div>  */}}
+      {{end}}
+      </div>
+{{end}}
+

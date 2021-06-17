@@ -1,0 +1,29 @@
+{{template "admin_common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="content-of-container"><h1>Les tickets</h1>
+        <div class="sub-content">
+            {{range $ticket := .Tickets}}
+                <a href="admin_ticketpage?id={{$ticket.Id}}">
+                    <div class="ticket-card">
+                        <h2>{{$ticket.Title}}</h2>
+                        {{if eq $ticket.Status 1}}<i class="fas fa-lock"></i>{{end}}
+                        {{if eq $ticket.Status 0}}<i class="fas fa-lock-open"></i>{{end}}
+                        <div class="content"><p>Sujet: {{$ticket.Subject}}</p></div>
+                    </div>
+                </a>
+            {{end}}
+        </div>
+    </div>
+{{end}}

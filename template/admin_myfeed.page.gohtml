@@ -1,0 +1,86 @@
+{{template "admin_common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="content-of-container" style="height: auto">
+        <h1>Mes Catégories :</h1>
+        <div>
+            <div>
+            {{if .Categories}}
+                {{ $categories := .Categories }}
+
+                {{ range $category := $categories }}
+                    {{if eq $category.ParentId 0}}
+                        <p>- {{$category.Title}}</p>
+                    {{else}}
+                        <p>- {{$category.Title}} (sous catégories)</p>
+                    {{end}}
+                {{end}}
+            {{else}}
+                <p>Vous ne modérez encore aucune catégories :/</p>
+            {{end}}
+            </div>
+        </div>
+        <h1>Les posts de mes Catégories :</h1>
+        <div style="overflow-y: scroll;height: 250px;" class="scroll-hidden">
+            {{if .Categories}}
+                {{ $posts := .Posts }}
+
+                {{ range $post := $posts }}
+                    <div class="post-preview" onclick="location.href='/post?id={{$post.Id}}'">
+                        <div class="pp-post" >
+                            <img src="{{$post.Avatar}}">
+                        </div>
+                        <div class="post-info">
+
+                            <div class="title-post">
+                                <h3>{{$post.Title}}</h3>
+                            </div>
+
+                            <div class="title-info">
+                                <span class="username"><strong>{{$post.UserName}}</strong></span>
+                                <span class="creation-date">{{$post.CreationDate}}</span>
+                                <span class="comments">{{$post.NumberOfComments}} Replies</span>
+                                <span class="likes">{{$post.Votes}} Likes</span>
+                            </div>
+                            <div class="profil-pics">
+                                <img src="https://image.flaticon.com/icons/png/512/4652/4652640.png">
+                                <img src="https://image.flaticon.com/icons/png/512/4652/4652650.png">
+                                <img src="https://image.flaticon.com/icons/png/512/4652/4652660.png">
+                                <img src="https://image.flaticon.com/icons/png/512/4652/4652670.png">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                {{end}}
+            {{else}}
+                <p>Vous ne modérez encore aucune catégories avec des posts :/</p>
+            {{end}}
+        </div>
+        <h1>Les Commentaires de mes Catégories :</h1>
+        <div style="overflow-y: scroll;height: 250px;" class="scroll-hidden">
+            {{if .Comments}}
+                {{ $comments := .Comments }}
+
+                {{ range $comment := $comments }}
+                    <div onclick="location.href='/post?id={{$comment.PostId}}#comment{{$comment.Id}}'" style="cursor: pointer">
+                        <p>{{$comment.Comment}}</p>
+                    </div>
+                    <hr>
+                {{end}}
+            {{else}}
+                <p>Vous ne modérez encore aucune catégories avec des commentaires :/</p>
+            {{end}}
+        </div>
+    </div>
+{{end}}

@@ -1,0 +1,31 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+                <div style="margin-right:auto;margin-left:auto;position:relative;"class="content-of-container"><h1>Les tickets</h1><a id="new-ticket" href="/newticket">New Ticket</a>
+                   {{if eq .Page "ticket"}}
+                    <div class="sub-content">
+                        {{range $ticket := .Tickets}}
+                            <a href="/ticketsmessage?ticketpage={{$ticket.Id}}">
+                                <div class="ticket-card">
+                                    <h2>{{$ticket.Title}}</h2>
+                                    {{if eq $ticket.Status 1}}<i class="fas fa-lock"></i>{{end}}
+                                    {{if eq $ticket.Status 0}}<i class="fas fa-lock-open"></i>{{end}}
+                                    <div class="content"><p>{{.Subject}}</p></div>
+                                </div>
+                            </a>
+                        {{end}}
+                    </div>
+                    {{end}}
+              
+{{end}}

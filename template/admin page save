@@ -1,0 +1,42 @@
+{{template "common" .}} <!-- Appelle du layout -->
+
+<!-- paramètre en plus dans le head (exemple un link vers une api)  -->
+{{define "head"}}
+{{end}}
+
+<!-- titre -->
+{{define "title"}}
+    Admin Page
+{{end}}
+
+
+<!-- Contenue principale de la page -->
+{{define "main"}}
+    <div class="container">
+        <div class="sidebar-admin">
+            <a href="admin_ticket">
+                <div class="{{if eq .Page "ticket"}}active{{end}}{{if eq .Page "ticketPage"}}active{{end}}">Ticket</div>
+            </a>
+            <a href="admin_gestionusers">
+                <div>Gestion Utilisateurs</div>
+            </a>
+            <div>Permission</div>
+            <div>Catégories</div>
+            <div>test</div>
+        </div>
+        <div class="content-of-container"><h1>Les tickets</h1>
+            <div class="sub-content">
+                {{range $ticket := .Tickets}}
+                    <a href="?ticketpage={{$ticket.Id}}">
+                        <div class="ticket-card">
+                            <h2>{{$ticket.Title}}</h2>
+                            {{if eq $ticket.Status 1}}<i class="fas fa-lock"></i>{{end}}
+                            {{if eq $ticket.Status 0}}<i class="fas fa-lock-open"></i>{{end}}
+                            <div class="content"><p>Créateur: {{.Creator.Username}}</p></div>
+                        </div>
+                    </a>
+                {{end}}
+            </div>
+        </div>
+    </div>
+{{end}}
